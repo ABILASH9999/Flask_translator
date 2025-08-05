@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Translator with Voice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        input, textarea, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .flash {
+            padding: 10px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🌐 Text Translator & Speaker</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label>Select Language:</label>
+        <select name="lang" required>
+            <option value="">-- Select Language --</option>
+            {% for language in languages %}
+                <option value="{{ language }}" {% if selected_lang == language %}selected{% endif %}>{{ language }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Text to Translate:</label>
+        <textarea name="text" rows="4" required></textarea>
+
+        <button type="submit">Translate & Play</button>
+    </form>
+
+    {% if translation %}
+        <h3>🌍 Translated Text:</h3>
+        <p>{{ translation }}</p>
+    {% endif %}
+
+    {% if audio_file %}
+        <h3>🎧 Translated Audio:</h3>
+        <audio controls autoplay>
+            <source src="{{ url_for('static', filename=audio_file) }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    {% endif %}
+</div>
+</body>
+</html>
